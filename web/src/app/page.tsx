@@ -1,38 +1,45 @@
+import Sidebar from "@/components/layout/Sidebar";
+
 export default function Home() {
   return (
-    <main className="min-h-screen bg-slate-100">
-      <header className="bg-blue-700 text-white p-6 shadow">
-        <h1 className="text-3xl font-bold">SATTVAM AI ERP</h1>
-        <p className="mt-2">
-          AI Powered Accounting & Business Management
+    <div className="flex min-h-screen">
+      {/* Sidebar */}
+      <Sidebar />
+
+      {/* Main Content */}
+      <main className="flex-1 bg-slate-100 p-8">
+        <h1 className="text-4xl font-bold text-slate-800">
+          Dashboard
+        </h1>
+
+        <p className="text-slate-500 mt-2">
+          Welcome to SATTVAM AI ERP 🚀
         </p>
-      </header>
 
-      <section className="p-8">
-        <h2 className="text-2xl font-bold mb-6">Dashboard</h2>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid gap-6 mt-8 md:grid-cols-2 lg:grid-cols-4">
           <div className="bg-white rounded-xl shadow p-6">
-            <h3 className="text-gray-500">Today's Sales</h3>
+            <h2 className="text-gray-500">Today's Sales</h2>
             <p className="text-3xl font-bold text-green-600">₹0</p>
           </div>
 
           <div className="bg-white rounded-xl shadow p-6">
-            <h3 className="text-gray-500">Today's Purchase</h3>
+            <h2 className="text-gray-500">Purchases</h2>
             <p className="text-3xl font-bold text-blue-600">₹0</p>
           </div>
 
           <div className="bg-white rounded-xl shadow p-6">
-            <h3 className="text-gray-500">Cash Balance</h3>
-            <p className="text-3xl font-bold text-orange-600">₹0</p>
+            <h2 className="text-gray-500">Customers</h2>
+            <p className="text-3xl font-bold">0</p>
           </div>
 
           <div className="bg-white rounded-xl shadow p-6">
-            <h3 className="text-gray-500">AI Status</h3>
-            <p className="text-xl font-bold text-purple-600">Ready 🤖</p>
+            <h2 className="text-gray-500">AI Status</h2>
+            <p className="text-2xl font-bold text-purple-600">
+              Ready 🤖
+            </p>
           </div>
         </div>
-      </section>
-    </main>
+      </main>
+    </div>
   );
 }
