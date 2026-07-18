@@ -1,0 +1,21 @@
+node_modules
+
+/generated/prisma
+
+# Database
+*.db
+*.db-journal
+
+# Prisma database
+prisma/dev.db
+prisma/dev.db-journal
+
+# Environment
+.env
+.env.local
+
+# Next.js
+.next
+
+# Archives
+*.zip
