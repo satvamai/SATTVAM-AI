@@ -8,22 +8,40 @@ export const customerSchema = z.object({
 
   mobile: z
     .string()
-    .regex(/^[6-9]\d{9}$/, "Enter a valid 10-digit mobile number"),
+    .trim()
+    .optional()
+    .or(z.literal(""))
+    .refine(
+      (value) =>
+        value === "" || /^[6-9]\d{9}$/.test(value),
+      {
+        message: "Enter a valid 10-digit mobile number",
+      }
+    ),
 
   email: z
     .string()
     .trim()
-    .email("Enter a valid email address"),
+    .optional()
+    .or(z.literal(""))
+    .refine(
+      (value) =>
+        value === "" ||
+        /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value),
+      {
+        message: "Enter a valid email address",
+      }
+    ),
 
   city: z
     .string()
     .trim()
-    .min(2, "City is required"),
+    .optional(),
 
   address: z
     .string()
     .trim()
-    .min(5, "Address is required"),
+    .optional(),
 
   gstNumber: z
     .string()

@@ -8,37 +8,109 @@ datasource db {
 }
 
 model Customer {
-  id             String   @id @default(cuid())
+  id             String  @id @default(cuid())
   name           String
-  mobile         String
-  email          String
-  city           String
-  address        String
-  gstNumber      String
-  openingBalance Float    @default(0)
-  creditLimit    Float    @default(0)
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  mobile         String?
+  email          String?
+  city           String?
+  address        String?
+  gstNumber      String?
+  openingBalance Float   @default(0)
+  creditLimit    Float   @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  invoices Invoice[]
 }
 
 model Product {
-  id       String @id @default(cuid())
-  name     String
-  sku      String @unique
-  hsnCode  String
+  id String @id @default(cuid())
+
+  name String
+
+  sku String? @unique
+
+  barcode String?
+
+  hsnCode String?
+
   category String
-  brand    String
-  unit     String
+
+  brand String
+
+  unit String
 
   purchasePrice Float
-  sellingPrice  Float
-  gst           Float
+
+  sellingPrice Float
+
+  gst Float
 
   openingStock Float @default(0)
+
   minimumStock Float @default(0)
+
+  description String?
 
   status Boolean @default(true)
 
   createdAt DateTime @default(now())
+
   updatedAt DateTime @updatedAt
+
+  invoiceItems InvoiceItem[]
+}
+
+model Invoice {
+  id String @id @default(cuid())
+
+  invoiceNo String @unique
+
+  invoiceDate DateTime @default(now())
+
+  customerId String
+  customer Customer @relation(fields: [customerId], references: [id])
+
+  subTotal Float
+
+  discount Float @default(0)
+
+  gstAmount Float @default(0)
+
+  grandTotal Float
+
+  paymentStatus PaymentStatus @default(DUE)
+
+  notes String?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  items InvoiceItem[]
+}
+
+model InvoiceItem {
+  id String @id @default(cuid())
+
+  invoiceId String
+  invoice Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+
+  productId String
+  product Product @relation(fields: [productId], references: [id])
+
+  quantity Float
+
+  rate Float
+
+  gst Float
+
+  amount Float
+}
+
+enum PaymentStatus {
+  PAID
+  PARTIAL
+  DUE
 }

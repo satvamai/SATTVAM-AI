@@ -1,113 +1,98 @@
 "use client";
 
-import { Control, Controller } from "react-hook-form";
-import { Input } from "@/components/ui/input";
-import { ProductFormValues } from "@/validations/product-schema";
+import { Package2 } from "lucide-react";
+import { useFormContext } from "react-hook-form";
 
-interface Props {
-  control: Control<ProductFormValues>;
-}
+import { ProductFormData } from "@/lib/validations/product-schema";
 
-export default function ProductBasicInfo({ control }: Props) {
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
+export default function ProductBasicInfo() {
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext<ProductFormData>();
+
   return (
-    <div className="space-y-5">
+    <Card className="rounded-2xl border shadow-sm">
+      <CardHeader className="border-b bg-muted/30">
+        <CardTitle className="flex items-center gap-2 text-lg font-semibold">
+          <Package2 className="h-5 w-5 text-blue-600" />
+          Basic Information
+        </CardTitle>
 
-      <Controller
-        control={control}
-        name="name"
-        render={({ field, fieldState }) => (
-          <div>
-            <label className="text-sm font-medium">Product Name</label>
-            <Input {...field} placeholder="Enter product name" />
-            {fieldState.error && (
-              <p className="text-red-500 text-xs mt-1">
-                {fieldState.error.message}
+        <p className="text-sm text-muted-foreground">
+          Enter the basic details of your product.
+        </p>
+      </CardHeader>
+
+      <CardContent className="pt-6">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+
+          {/* Product Name */}
+
+          <div className="space-y-2">
+            <label className="text-sm font-medium">
+              Product Name
+            </label>
+
+            <input
+              {...register("name")}
+              placeholder="Premium Wheat Flour"
+              className="h-11 w-full rounded-xl border px-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+            />
+
+            {errors.name && (
+              <p className="text-sm text-red-500">
+                {errors.name.message}
               </p>
             )}
           </div>
-        )}
-      />
 
-      <Controller
-        control={control}
-        name="sku"
-        render={({ field, fieldState }) => (
-          <div>
-            <label className="text-sm font-medium">SKU</label>
-            <Input {...field} placeholder="SKU" />
-            {fieldState.error && (
-              <p className="text-red-500 text-xs mt-1">
-                {fieldState.error.message}
-              </p>
-            )}
+          {/* SKU */}
+
+          <div className="space-y-2">
+            <label className="text-sm font-medium">
+              SKU
+            </label>
+
+            <input
+              {...register("sku")}
+              placeholder="PWF001"
+              className="h-11 w-full rounded-xl border px-3 uppercase outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+            />
           </div>
-        )}
-      />
 
-      <Controller
-        control={control}
-        name="hsnCode"
-        render={({ field, fieldState }) => (
-          <div>
-            <label className="text-sm font-medium">HSN Code</label>
-            <Input {...field} placeholder="HSN Code" />
-            {fieldState.error && (
-              <p className="text-red-500 text-xs mt-1">
-                {fieldState.error.message}
-              </p>
-            )}
+          {/* Barcode */}
+
+          <div className="space-y-2">
+            <label className="text-sm font-medium">
+              Barcode
+            </label>
+
+            <input
+              {...register("barcode")}
+              placeholder="BAR001"
+              className="h-11 w-full rounded-xl border px-3 uppercase outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+            />
           </div>
-        )}
-      />
 
-      <Controller
-        control={control}
-        name="category"
-        render={({ field, fieldState }) => (
-          <div>
-            <label className="text-sm font-medium">Category</label>
-            <Input {...field} placeholder="Category" />
-            {fieldState.error && (
-              <p className="text-red-500 text-xs mt-1">
-                {fieldState.error.message}
-              </p>
-            )}
+          {/* HSN */}
+
+          <div className="space-y-2">
+            <label className="text-sm font-medium">
+              HSN Code
+            </label>
+
+            <input
+              {...register("hsnCode")}
+              placeholder="11010000"
+              className="h-11 w-full rounded-xl border px-3 uppercase outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+            />
           </div>
-        )}
-      />
 
-      <Controller
-        control={control}
-        name="brand"
-        render={({ field, fieldState }) => (
-          <div>
-            <label className="text-sm font-medium">Brand</label>
-            <Input {...field} placeholder="Brand" />
-            {fieldState.error && (
-              <p className="text-red-500 text-xs mt-1">
-                {fieldState.error.message}
-              </p>
-            )}
-          </div>
-        )}
-      />
-
-      <Controller
-        control={control}
-        name="unit"
-        render={({ field, fieldState }) => (
-          <div>
-            <label className="text-sm font-medium">Unit</label>
-            <Input {...field} placeholder="Kg / Pcs / Box" />
-            {fieldState.error && (
-              <p className="text-red-500 text-xs mt-1">
-                {fieldState.error.message}
-              </p>
-            )}
-          </div>
-        )}
-      />
-
-    </div>
+        </div>
+      </CardContent>
+    </Card>
   );
 }

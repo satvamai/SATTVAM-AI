@@ -9,12 +9,18 @@ export const productSchema = z.object({
   sku: z
     .string()
     .trim()
-    .min(2, "SKU is required"),
+    .optional()
+    .or(z.literal("")),
+
+  barcode: z
+    .string()
+    .optional(),
 
   hsnCode: z
     .string()
     .trim()
-    .min(4, "HSN Code is required"),
+    .optional()
+    .or(z.literal("")),
 
   category: z
     .string()
@@ -51,6 +57,10 @@ export const productSchema = z.object({
   minimumStock: z.coerce
     .number()
     .min(0, "Minimum stock cannot be negative"),
+
+  description: z
+    .string()
+    .optional(),
 });
 
-export type ProductFormValues = z.input<typeof productSchema>;
+export type ProductFormValues = z.infer<typeof productSchema>;

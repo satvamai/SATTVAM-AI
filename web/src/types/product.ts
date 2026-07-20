@@ -1,9 +1,39 @@
 export interface Product {
   id: string;
 
+  // General Information
   name: string;
-  sku: string;
-  hsnCode: string;
+  sku?: string;
+  barcode?: string;
+  hsnCode?: string;
+
+  category: string;
+  brand: string;
+  unit: string;
+
+  // Pricing
+  purchasePrice: number;
+  sellingPrice: number;
+  gst: number;
+
+  // Inventory
+  openingStock: number;
+  minimumStock: number;
+
+  // Additional
+  description?: string;
+  status: boolean;
+
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ProductFormValues {
+  name: string;
+
+  sku?: string;
+  barcode?: string;
+  hsnCode?: string;
 
   category: string;
   brand: string;
@@ -11,14 +41,12 @@ export interface Product {
 
   purchasePrice: number;
   sellingPrice: number;
-
   gst: number;
 
   openingStock: number;
   minimumStock: number;
 
-  status: boolean;
+  description?: string;
 
-  createdAt?: string;
-  updatedAt?: string;
+  status: boolean;
 }

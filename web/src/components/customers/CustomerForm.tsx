@@ -7,7 +7,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
-
 import CustomerBasicInfo from "./CustomerBasicInfo";
 import CustomerFinancialInfo from "./CustomerFinancialInfo";
 
@@ -16,40 +15,53 @@ import {
   CustomerFormValues,
 } from "@/validations/customer-schema";
 
-export default function CustomerForm() {
+import { Customer } from "@/types/customer";
+
+interface CustomerFormProps {
+  customer?: Customer;
+  isEdit?: boolean;
+}
+
+export default function CustomerForm({
+  customer,
+  isEdit = false,
+}: CustomerFormProps) {
   const router = useRouter();
 
   const [loading, setLoading] = useState(false);
 
- const {
-  register,
-  handleSubmit,
-  reset,
-  formState: { errors },
-} = useForm<CustomerFormValues>({
-  resolver: zodResolver(customerSchema),
-  defaultValues: {
-    name: "",
-    mobile: "",
-    email: "",
-    city: "",
-    address: "",
-    gstNumber: "",
-    openingBalance: 0,
-    creditLimit: 0,
-  },
-});
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<CustomerFormValues>({
+    resolver: zodResolver(customerSchema),
+    defaultValues: {
+      name: customer?.name ?? "",
+      mobile: customer?.mobile ?? "",
+      email: customer?.email ?? "",
+      city: customer?.city ?? "",
+      address: customer?.address ?? "",
+      gstNumber: customer?.gstNumber ?? "",
+      openingBalance: customer?.openingBalance ?? 0,
+      creditLimit: customer?.creditLimit ?? 0,
+    },
+  });
 
   async function onSubmit(values: CustomerFormValues) {
     try {
       setLoading(true);
 
       const response = await fetch("/api/customers", {
-        method: "POST",
+        method: isEdit ? "PUT" : "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(values),
+        body: JSON.stringify({
+          ...values,
+          id: customer?.id,
+        }),
       });
 
       const data = await response.json();
@@ -58,7 +70,11 @@ export default function CustomerForm() {
         throw new Error(data.message || "Failed to create customer");
       }
 
-      toast.success("Customer created successfully.");
+      toast.success(
+        isEdit
+          ? "Customer updated successfully."
+          : "Customer created successfully."
+      );
 
       reset();
 
@@ -105,7 +121,11 @@ export default function CustomerForm() {
           type="submit"
           disabled={loading}
         >
-          {loading ? "Saving..." : "Save Customer"}
+          {loading
+            ? "Saving..."
+            : isEdit
+            ? "Update Customer"
+            : "Save Customer"}
         </Button>
       </div>
     </form>

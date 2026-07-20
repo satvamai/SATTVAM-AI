@@ -16,6 +16,7 @@ import {
 } from "@tanstack/react-table";
 
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 import {
   Table,
@@ -25,8 +26,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
-import { Button } from "@/components/ui/button";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -42,10 +41,8 @@ export function DataTable<TData, TValue>({
   loading = false,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
-
   const [columnFilters, setColumnFilters] =
     React.useState<ColumnFiltersState>([]);
-
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
 
@@ -60,61 +57,55 @@ export function DataTable<TData, TValue>({
     },
 
     onSortingChange: setSorting,
-
     onColumnFiltersChange: setColumnFilters,
-
     onColumnVisibilityChange: setColumnVisibility,
 
     getCoreRowModel: getCoreRowModel(),
-
     getSortedRowModel: getSortedRowModel(),
-
     getFilteredRowModel: getFilteredRowModel(),
-
     getPaginationRowModel: getPaginationRowModel(),
   });
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        {searchKey && (
+          <Input
+            placeholder={`🔍 Search ${searchKey}...`}
+            value={
+              (table.getColumn(searchKey)?.getFilterValue() as string) ?? ""
+            }
+            onChange={(e) =>
+              table.getColumn(searchKey)?.setFilterValue(e.target.value)
+            }
+            className="w-full md:w-80 rounded-xl"
+          />
+        )}
 
-      {searchKey && (
-        <Input
-          placeholder={`Search ${searchKey}...`}
-          value={
-            (table
-              .getColumn(searchKey)
-              ?.getFilterValue() as string) ?? ""
-          }
-          onChange={(e) =>
-            table
-              .getColumn(searchKey)
-              ?.setFilterValue(e.target.value)
-          }
-          className="max-w-sm"
-        />
-      )}
+        <div className="rounded-xl border bg-white px-4 py-2 text-sm font-medium shadow-sm">
+          Total Records :
+          <span className="ml-2 text-indigo-600">{data.length}</span>
+        </div>
+      </div>
 
-      <div className="rounded-xl border overflow-hidden">
-
+      <div className="overflow-hidden rounded-2xl border bg-white shadow-sm">
         <Table>
-
-          <TableHeader>
+          <TableHeader className="bg-slate-100">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
-
                 {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id}>
-
+                  <TableHead
+                    key={header.id}
+                    className="font-semibold text-slate-700"
+                  >
                     {header.isPlaceholder
                       ? null
                       : flexRender(
                           header.column.columnDef.header,
                           header.getContext()
                         )}
-
                   </TableHead>
                 ))}
-
               </TableRow>
             ))}
           </TableHeader>
@@ -124,14 +115,17 @@ export function DataTable<TData, TValue>({
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
-                  className="h-32 text-center"
+                  className="h-40 text-center text-slate-500"
                 >
                   Loading...
                 </TableCell>
               </TableRow>
             ) : table.getRowModel().rows.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id}>
+                <TableRow
+                  key={row.id}
+                  className="transition hover:bg-slate-50"
+                >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
                       {flexRender(
@@ -143,12 +137,22 @@ export function DataTable<TData, TValue>({
                 </TableRow>
               ))
             ) : (
-              <TableRow>
+                            <TableRow>
                 <TableCell
                   colSpan={columns.length}
-                  className="h-32 text-center"
+                  className="h-40 text-center"
                 >
-                  No data found.
+                  <div className="space-y-2">
+                    <div className="text-5xl">📂</div>
+
+                    <p className="font-semibold">
+                      No Customers Found
+                    </p>
+
+                    <p className="text-sm text-slate-500">
+                      Add your first customer to get started.
+                    </p>
+                  </div>
                 </TableCell>
               </TableRow>
             )}
@@ -156,13 +160,14 @@ export function DataTable<TData, TValue>({
         </Table>
       </div>
 
-      <div className="flex items-center justify-between">
-
-        <div className="text-sm text-muted-foreground">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <p className="text-sm text-slate-500">
           Showing{" "}
-          {table.getState().pagination.pageIndex *
-            table.getState().pagination.pageSize +
-            1}
+          {data.length === 0
+            ? 0
+            : table.getState().pagination.pageIndex *
+                table.getState().pagination.pageSize +
+              1}
           {" - "}
           {Math.min(
             (table.getState().pagination.pageIndex + 1) *
@@ -170,33 +175,28 @@ export function DataTable<TData, TValue>({
             data.length
           )}
           {" of "}
-          {data.length}
-        </div>
+          <span className="font-semibold">
+            {data.length}
+          </span>
+        </p>
 
-        <div className="flex items-center gap-2">
-
+        <div className="flex gap-2">
           <Button
             variant="outline"
-            size="sm"
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
           >
-            Previous
+            ← Previous
           </Button>
 
           <Button
-            variant="outline"
-            size="sm"
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
           >
-            Next
+            Next →
           </Button>
-
         </div>
-
       </div>
-
     </div>
   );
 }
